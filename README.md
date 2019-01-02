@@ -3,7 +3,7 @@
 
 ## Introduction
 
-In this code-along, we will reinvestigate our previous Santa image classification example. To do this, we will review loading a dataset from a nested directory structure and building a baseline model. From there, we'll demonstrate building a CNN and demonstrate its improved performance on image recognition tasks.
+In this code-along, we will reinvestigate our previous Santa image classification example. To do this, we will review loading a dataset from a nested directory structure and building a baseline model. From there, we'll demonstrate building a CNN and demonstrate its improved performance on image recognition tasks. You are recommended to run the cells in order to further explore variables and investigate the code snippets themselves. However, please note that some cells (particularly training cells later on) may take some time to run. [On a Macbook pro the entire notebook took ~15 minutes to run.]
 
 ## Objectives  
 
@@ -517,7 +517,7 @@ results_test
 
 
 
-Remember that, in our lab on "building deeper neural networks from scratch, we got to a train set prediction was 95%, and a test set prediction of 74.23%.
+Remember that, in our previous lab on building deeper neural networks from scratch, we obtained a training accuracy of 95%, and a test set accuracy of 74.23%.
 
 This result is similar to what we got building our manual "deeper" dense model. The results are not entirely different. This is not a surprise!
 - Before, we only had a training and a validation set (which was at the same time the test set). Now we have split up the data 3-ways.
