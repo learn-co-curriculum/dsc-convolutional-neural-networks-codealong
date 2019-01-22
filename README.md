@@ -243,7 +243,7 @@ print('There are', len(os.listdir(test_not_santa)), 'images without santa in the
     There are 90 images without santa in the test set
 
 
-## Use a densely connected network as a baseline.
+## Use a densely connected network as a baseline
 
 Now that we've sorted our data, we can easily use Keras' module with image-processing tools. Let's import the necessary libraries below. 
 
