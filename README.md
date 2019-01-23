@@ -1,5 +1,5 @@
 
-# Convolutional Neural Networks - Lab
+# Convolutional Neural Networks - Codealong
 
 ## Introduction
 
