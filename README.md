@@ -24,7 +24,7 @@ import os, shutil
 
 Create three objects representing the existing directories 'data/santa/' as `data_santa_dir` and 'data/not_santa/' as `data_not_santa_dir`. We will create a new directory 'split/' as `new_dir`, where we will split the data set in three groups (or three subdirectories) 'train', 'test' and 'validation', each containing `santa` and `not_santa` subfolders. The final desired structure is represented below:
 
-![title](folder_structure.png)
+![title](images/folder_structure.png)
 
 
 ```python
