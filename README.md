@@ -3,17 +3,20 @@
 
 ## Introduction
 
-In this code-along, we will reinvestigate our previous Santa image classification example. To do this, we will review loading a dataset from a nested directory structure and building a baseline model. From there, we'll demonstrate building a CNN and demonstrate its improved performance on image recognition tasks. You are recommended to run the cells in order to further explore variables and investigate the code snippets themselves. However, please note that some cells (particularly training cells later on) may take some time to run. [On a Macbook pro the entire notebook took ~15 minutes to run.]
+In this codealong, we will reinvestigate our previous Santa image classification example. To do this, we will review loading a dataset from a nested directory structure and building a baseline model. From there, we'll build a CNN and demonstrate its improved performance on image recognition tasks. It is recommended you run the cells in order to further explore variables and investigate the code snippets themselves. However, please note that some cells (particularly training cells later on) may take several minutes to run. (On a Macbook pro the entire notebook took ~15 minutes to run.)
 
 ## Objectives  
 
 You will be able to:
-* Load data from a hierarchical directory structure
-* Build a CNN for image recognition tasks
 
-## Properly store your images
+- Load images from a hierarchical file structure using an image datagenerator 
+- Explain why one might augment image data when training a neural network 
+- Apply data augmentation to image files before training a neural network 
+- Build a CNN using Keras 
 
-When you're analyzing your image data, file management is important. We will be using the santa images again, but this time, they are just stored in two folders: `santa` and `not_santa`, under. We want to work with a `train`, `validation` and `test` data set now, as we know by now that this is the best way to go. 
+## Properly store your images 
+
+When you're analyzing your image data, file management is important. We will be using the santa images again, but this time, they are stored in two folders: `santa` and `not_santa`. We want to work with a `train`, `validation`, and `test` datasets now, as we know by now that this is the best way to obtain unbiased estimate of your model performance.  
 
 Let's import libraries `os` and `shutil`, as we'll need them to create the new folders and move the new files in there.
 
@@ -22,7 +25,7 @@ Let's import libraries `os` and `shutil`, as we'll need them to create the new f
 import os, shutil
 ```
 
-Create three objects representing the existing directories 'data/santa/' as `data_santa_dir` and 'data/not_santa/' as `data_not_santa_dir`. We will create a new directory 'split/' as `new_dir`, where we will split the data set in three groups (or three subdirectories) 'train', 'test' and 'validation', each containing `santa` and `not_santa` subfolders. The final desired structure is represented below:
+Below we create three objects representing the existing directories: `data/santa/` as `data_santa_dir` and `data/not_santa/` as `data_not_santa_dir`. We will create a new directory `split/` as `new_dir`, where we will split the dataset in three groups (or three subdirectories): `train`, `test`, and `validation`, each containing `santa` and `not_santa` subfolders. The final desired structure is represented below: 
 
 ![title](images/folder_structure.png)
 
@@ -61,17 +64,17 @@ imgs_santa[0:10]
 
 
 
-Let's see how many images there are in the 'santa' directory.
+Let's see how many images there are in the `santa` directory.
 
 
 ```python
-print('There are',len(imgs_santa), 'santa images')
+print('There are', len(imgs_santa), 'santa images')
 ```
 
     There are 461 santa images
 
 
-Now, repeat this for the 'not_santa' directory
+Now, repeat this for the `not_santa` directory: 
 
 
 ```python
@@ -86,7 +89,7 @@ print('There are', len(imgs_not_santa), 'images without santa')
     There are 461 images without santa
 
 
-Create all the folders and subfolder in order to get the structure represented above. You can use `os.path.join` to create strings that will be used later on to generate new directories.
+Create all the folders and subfolders in order to get the structure represented above. You can use `os.path.join()` to create strings that will be used later on to generate new directories.
 
 
 ```python
@@ -169,7 +172,7 @@ for img in imgs:
     shutil.copyfile(origin, destination)
 ```
 
-Now, repeat all this for the 'not_santa' images!
+Now, repeat all this for the `not_santa` images!
 
 
 ```python
@@ -245,7 +248,7 @@ print('There are', len(os.listdir(test_not_santa)), 'images without santa in the
 
 ## Use a densely connected network as a baseline
 
-Now that we've sorted our data, we can easily use Keras' module with image-processing tools. Let's import the necessary libraries below. 
+Now that we've a handle on our data, we can easily use Keras' module with image-processing tools. Let's import the necessary libraries below. 
 
 
 ```python
@@ -351,11 +354,12 @@ val_y = np.reshape(val_labels[:,0], (200,1))
 
 
 ```python
+# Build a baseline fully connected model
 from keras import models
 from keras import layers
 np.random.seed(123)
 model = models.Sequential()
-model.add(layers.Dense(20, activation='relu', input_shape=(12288,))) #2 hidden layers
+model.add(layers.Dense(20, activation='relu', input_shape=(12288,))) # 2 hidden layers
 model.add(layers.Dense(7, activation='relu'))
 model.add(layers.Dense(5, activation='relu'))
 model.add(layers.Dense(1, activation='sigmoid'))
@@ -517,14 +521,13 @@ results_test
 
 
 
-Remember that, in our previous lab on building deeper neural networks from scratch, we obtained a training accuracy of 95%, and a test set accuracy of 74.23%.
+Remember that, in our previous lab on building deeper neural networks from scratch, we obtained a training accuracy of 95%, and a test set accuracy of 74.23%. 
 
 This result is similar to what we got building our manual "deeper" dense model. The results are not entirely different. This is not a surprise!
 - Before, we only had a training and a validation set (which was at the same time the test set). Now we have split up the data 3-ways.
 - We didn't use minibatches before, yet we used mini-batches of 32 units here.
-
-
-## Convnet
+ 
+## Build a CNN
 
 
 ```python
@@ -662,17 +665,17 @@ results_test
 
 ## Data Augmentation
 
-ImageDataGenerator becomes really useful when we *actually* want to generate more data. We'll show you how this works.
+`ImageDataGenerator()` becomes really useful when we *actually* want to generate more data. We'll show you how this works. 
 
 
 ```python
-train_datagen= ImageDataGenerator(rescale=1./255, 
-     rotation_range=40,
-     width_shift_range=0.2,
-     height_shift_range=0.2,
-     shear_range=0.3,
-     zoom_range=0.1,
-     horizontal_flip = False)
+train_datagen = ImageDataGenerator(rescale=1./255, 
+                                   rotation_range=40, 
+                                   width_shift_range=0.2, 
+                                   height_shift_range=0.2, 
+                                   shear_range=0.3, 
+                                   zoom_range=0.1, 
+                                   horizontal_flip=False)
 ```
 
 
@@ -694,15 +697,15 @@ plt.show()
 ```
 
 
-![png](index_files/index_61_0.png)
+![png](index_files/index_56_0.png)
 
 
 
-![png](index_files/index_61_1.png)
+![png](index_files/index_56_1.png)
 
 
 
-![png](index_files/index_61_2.png)
+![png](index_files/index_56_2.png)
 
 
 
@@ -758,12 +761,11 @@ model.compile(loss='binary_crossentropy',
 
 
 ```python
-history_2 = model.fit_generator(
-      train_generator,
-      steps_per_epoch=25,
-      epochs=30,
-      validation_data=val_generator,
-      validation_steps=25)
+history_2 = model.fit_generator(train_generator, 
+                                steps_per_epoch=25, 
+                                epochs=30, 
+                                validation_data=val_generator, 
+                                validation_steps=25)
 ```
 
     Epoch 1/30
