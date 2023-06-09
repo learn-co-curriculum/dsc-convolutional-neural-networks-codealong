@@ -1,4 +1,3 @@
-
 # Convolutional Neural Networks - Codealong
 
 ## Introduction
@@ -14,55 +13,14 @@ You will be able to:
 - Apply data augmentation to image files before training a neural network 
 - Build a CNN using Keras 
 
-## Properly store your images 
+## Data Exploration
 
-When you're analyzing your image data, file management is important. We will be using the santa images again, but this time, they are stored in two folders: `santa` and `not_santa`. We want to work with a `train`, `validation`, and `test` datasets now, as we know by now that this is the best way to obtain unbiased estimate of your model performance.  
-
-Let's import libraries `os` and `shutil`, as we'll need them to create the new folders and move the new files in there.
+Let's import libraries `os` and `shutil`. They can help us access our underlying file structure.
 
 
 ```python
 import os, shutil
 ```
-
-Below we create three objects representing the existing directories: `data/santa/` as `data_santa_dir` and `data/not_santa/` as `data_not_santa_dir`. We will create a new directory `split/` as `new_dir`, where we will split the dataset in three groups (or three subdirectories): `train`, `test`, and `validation`, each containing `santa` and `not_santa` subfolders. The final desired structure is represented below: 
-
-![title](images/folder_structure.png)
-
-
-```python
-data_santa_dir = 'data/santa/'
-data_not_santa_dir = 'data/not_santa/'
-new_dir = 'split/'
-```
-
-You can use `os.listdir()` to create an object that stores all the relevant image names. 
-
-
-```python
-imgs_santa = [file for file in os.listdir(data_santa_dir) if file.endswith('.jpg')]
-```
-
-
-```python
-imgs_santa[0:10]
-```
-
-
-
-
-    ['00000428.jpg',
-     '00000400.jpg',
-     '00000366.jpg',
-     '00000372.jpg',
-     '00000414.jpg',
-     '00000399.jpg',
-     '00000158.jpg',
-     '00000164.jpg',
-     '00000170.jpg',
-     '00000038.jpg']
-
-
 
 Let's see how many images there are in the `santa` directory.
 
@@ -89,24 +47,19 @@ print('There are', len(imgs_not_santa), 'images without santa')
     There are 461 images without santa
 
 
-Create all the folders and subfolders in order to get the structure represented above. You can use `os.path.join()` to create strings that will be used later on to generate new directories.
+### `split` Folder
 
 
 ```python
-os.mkdir(new_dir)
-```
-
-
-```python
-train_folder = os.path.join(new_dir, 'train')
+train_folder = os.path.join('split', 'train')
 train_santa = os.path.join(train_folder, 'santa')
 train_not_santa = os.path.join(train_folder, 'not_santa')
 
-test_folder = os.path.join(new_dir, 'test')
+test_folder = os.path.join('split', 'test')
 test_santa = os.path.join(test_folder, 'santa')
 test_not_santa = os.path.join(test_folder, 'not_santa')
 
-val_folder = os.path.join(new_dir, 'validation')
+val_folder = os.path.join('split', 'validation')
 val_santa = os.path.join(val_folder, 'santa')
 val_not_santa = os.path.join(val_folder, 'not_santa')
 ```
@@ -123,80 +76,7 @@ train_santa
 
 
 
-Now use all the path strings you created to make new directories. You can use `os.mkdir()` to do this. Go have a look at your directory and see if this worked!
-
-
-```python
-os.mkdir(test_folder)
-os.mkdir(test_santa)
-os.mkdir(test_not_santa)
-
-os.mkdir(train_folder)
-os.mkdir(train_santa)
-os.mkdir(train_not_santa)
-
-os.mkdir(val_folder)
-os.mkdir(val_santa)
-os.mkdir(val_not_santa)
-```
-
-Copy the Santa images in the three santa subfolders. Let's put the first 271 images in the training set, the next 100 images in the validation set and the final 90 images in the test set.
-
-
-```python
-# train santa
-imgs = imgs_santa[:271]
-for img in imgs:
-    origin = os.path.join(data_santa_dir, img)
-    destination = os.path.join(train_santa, img)
-    shutil.copyfile(origin, destination)
-```
-
-
-```python
-# validation santa
-imgs = imgs_santa[271:371]
-for img in imgs:
-    origin = os.path.join(data_santa_dir, img)
-    destination = os.path.join(val_santa, img)
-    shutil.copyfile(origin, destination)
-```
-
-
-```python
-# test santa
-imgs = imgs_santa[371:]
-for img in imgs:
-    origin = os.path.join(data_santa_dir, img)
-    destination = os.path.join(test_santa, img)
-    shutil.copyfile(origin, destination)
-```
-
-Now, repeat all this for the `not_santa` images!
-
-
-```python
-# train not_santa
-imgs = imgs_not_santa[:271]
-for img in imgs:
-    origin = os.path.join(data_not_santa_dir, img)
-    destination = os.path.join(train_not_santa, img)
-    shutil.copyfile(origin, destination)
-# validation not_santa
-imgs = imgs_not_santa[271:371]
-for img in imgs:
-    origin = os.path.join(data_not_santa_dir, img)
-    destination = os.path.join(val_not_santa, img)
-    shutil.copyfile(origin, destination)
-# test not_santa
-imgs = imgs_not_santa[371:]
-for img in imgs:
-    origin = os.path.join(data_not_santa_dir, img)
-    destination = os.path.join(test_not_santa, img)
-    shutil.copyfile(origin, destination)
-```
-
-Let's print out how many images we have in each directory so we know for sure our numbers are right!
+Let's print out how many images we have in each directory in the `split` folder so we know for sure our numbers are right!
 
 
 ```python
@@ -258,7 +138,7 @@ import scipy
 import numpy as np
 from PIL import Image
 from scipy import ndimage
-from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
+from tensorflow.keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 
 np.random.seed(123)
 ```
@@ -371,7 +251,7 @@ model.compile(optimizer='sgd',
               loss='binary_crossentropy',
               metrics=['accuracy'])
 
-histoire = model.fit(train_img,
+history = model.fit(train_img,
                     train_y,
                     epochs=50,
                     batch_size=32,
@@ -697,15 +577,21 @@ plt.show()
 ```
 
 
-![png](index_files/index_56_0.png)
+    
+![png](index_files/index_42_0.png)
+    
 
 
 
-![png](index_files/index_56_1.png)
+    
+![png](index_files/index_42_1.png)
+    
 
 
 
-![png](index_files/index_56_2.png)
+    
+![png](index_files/index_42_2.png)
+    
 
 
 
@@ -761,11 +647,11 @@ model.compile(loss='binary_crossentropy',
 
 
 ```python
-history_2 = model.fit_generator(train_generator, 
-                                steps_per_epoch=25, 
-                                epochs=30, 
-                                validation_data=val_generator, 
-                                validation_steps=25)
+history_2 = model.fit(train_generator,
+                      steps_per_epoch=25,
+                      epochs=30,
+                      validation_data=val_generator,
+                      validation_steps=25)
 ```
 
     Epoch 1/30
