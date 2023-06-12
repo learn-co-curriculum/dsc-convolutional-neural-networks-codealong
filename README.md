@@ -653,10 +653,8 @@ model.compile(loss='binary_crossentropy',
 
 ```python
 history_2 = model.fit(train_generator,
-                      steps_per_epoch=25,
                       epochs=30,
-                      validation_data=val_generator,
-                      validation_steps=25)
+                      validation_data=val_generator)
 ```
 
     Epoch 1/30
