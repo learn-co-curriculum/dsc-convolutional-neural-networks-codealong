@@ -26,6 +26,14 @@ Let's see how many images there are in the `santa` directory.
 
 
 ```python
+data_santa_dir = 'data/santa/'
+data_not_santa_dir = 'data/not_santa/'
+```
+
+
+```python
+imgs_santa = [file for file in os.listdir(data_santa_dir) if file.endswith('.jpg')]
+
 print('There are', len(imgs_santa), 'santa images')
 ```
 
@@ -37,10 +45,7 @@ Now, repeat this for the `not_santa` directory:
 
 ```python
 imgs_not_santa = [file for file in os.listdir(data_not_santa_dir) if file.endswith('.jpg')]
-```
 
-
-```python
 print('There are', len(imgs_not_santa), 'images without santa')
 ```
 
